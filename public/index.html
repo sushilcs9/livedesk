@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LiveDesk</title>
+<meta name="description" content="Live results for elections and other major events, with sources and timestamps on every number.">
+<meta name="theme-color" content="#0f1720">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f1720'/%3E%3Crect x='6' y='16' width='5' height='10' fill='%233b6fd8'/%3E%3Crect x='13.5' y='8' width='5' height='18' fill='%23e7ecf2'/%3E%3Crect x='21' y='12' width='5' height='14' fill='%23d4473f'/%3E%3C/svg%3E">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#/" aria-label="LiveDesk home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>LiveDesk</a>
+    <nav class="crumbs" id="crumbs" aria-label="Breadcrumb"></nav>
+    <form class="search" id="searchForm" role="search">
+      <label class="sr-only" for="searchInput" data-i18n="search.label">Search candidates, states, districts</label>
+      <input id="searchInput" type="search" autocomplete="off" placeholder="Search candidate, state, district" data-i18n-ph="search.placeholder">
+    </form>
+    <div class="tools">
+      <span class="live" id="liveState" aria-live="polite"></span>
+      <select id="langSelect" aria-label="Language"><option value="en">EN</option><option value="es">ES</option></select>
+      <select id="tzSelect" aria-label="Time zone"></select>
+      <button id="themeBtn" class="icon-btn" type="button" aria-label="Switch light or dark theme" title="Theme"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button>
+    </div>
+  </div>
+</header>
+<div id="banner"></div>
+<main id="main" tabindex="-1"></main>
+<div id="tooltip" role="tooltip" hidden></div>
+<div id="toasts" aria-live="polite" aria-atomic="false"></div>
+<footer class="foot">
+  <div class="foot-inner">
+    <p><span data-i18n="foot.data">Results data:</span> <span id="footSources">—</span>. <a href="#/methodology" data-i18n="nav.methodology">Methodology and sources</a> · <a href="#/following" data-i18n="nav.following">Following</a> · <a href="/admin">Admin</a></p>
+    <p class="muted" data-i18n="foot.disclaimer">Results are unofficial until certified by election officials. A race is marked won only when a named source calls it.</p>
+  </div>
+</footer>
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

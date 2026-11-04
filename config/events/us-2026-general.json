@@ -1,0 +1,98 @@
+{
+  "id": "us-2026-general",
+  "name": "2026 U.S. General Election",
+  "shortName": "U.S. Midterms 2026",
+  "category": "elections",
+  "subcategory": "general",
+  "module": "elections",
+  "country": "US",
+  "regions": "us-states",
+  "startsAt": "2026-11-03T10:00:00Z",
+  "endsAt": null,
+  "status": "live",
+  "timezone": "America/New_York",
+  "languages": ["en", "es"],
+  "dashboard": {
+    "layout": "us-election",
+    "map": "us-states",
+    "panels": ["chambers", "map", "feed", "close-races", "races"]
+  },
+  "rules": {
+    "electoralSystem": "fptp",
+    "countsHeldBefore": "2026-11-03T23:00:00Z",
+    "closeRace": { "veryCloseMarginPts": 1, "competitiveMarginPts": 5, "minReportingPct": 1 },
+    "notableReportingJumpPts": 10,
+    "discrepancyTolerancePct": 0.5,
+    "chambers": {
+      "us_senate": {
+        "label": "U.S. Senate",
+        "total": 100,
+        "majority": 51,
+        "tieNote": "At 50–50 the Vice President casts tie-breaking votes. This dashboard does not project control from a tie.",
+        "holdover": { "DEM": 34, "REP": 31, "_note": "Seats not up in 2026, counted by caucus (Democrats include the two independents who caucus with them). civicAPI's own party seat figures are running tallies that include its calls, so they are not used here." }
+      },
+      "us_house": { "label": "U.S. House", "total": 435, "majority": 218, "holdover": { "DEM": 0, "REP": 0 } },
+      "governor": { "label": "Governors", "total": 50, "majority": null, "holdover": { "DEM": 6, "REP": 8 } }
+    },
+    "runoffRules": {
+      "GA": { "threshold": 50, "note": "Georgia requires a majority in general elections; a runoff follows if no candidate passes 50%." }
+    },
+    "rankedChoice": {
+      "AK": "Alaska uses ranked-choice voting in general elections. First-choice counts may not determine the winner.",
+      "ME": "Maine uses ranked-choice voting for federal races. First-choice counts may not determine the winner."
+    },
+    "seatHistory": {
+      "_source": "Party (by caucus) holding each Senate seat entering the 2026 election, including the Florida and Ohio special elections. Used only to compute Senate net change. Verify before relying on it.",
+      "us_senate": {
+        "AL": "REP", "AK": "REP", "AR": "REP", "CO": "DEM", "DE": "DEM", "FL": "REP", "GA": "DEM", "ID": "REP",
+        "IL": "DEM", "IA": "REP", "KS": "REP", "KY": "REP", "LA": "REP", "ME": "REP", "MA": "DEM", "MI": "DEM",
+        "MN": "DEM", "MS": "REP", "MT": "REP", "NE": "REP", "NH": "DEM", "NJ": "DEM", "NM": "DEM", "NC": "REP",
+        "OH": "REP", "OK": "REP", "OR": "DEM", "RI": "DEM", "SC": "REP", "SD": "REP", "TN": "REP", "TX": "REP",
+        "VA": "DEM", "WV": "REP", "WY": "REP"
+      }
+    },
+    "redistricted2026": ["AL", "CA", "FL", "LA", "MO", "NC", "OH", "TN", "TX", "UT"]
+  },
+  "sources": [
+    {
+      "id": "civicapi",
+      "adapter": "civicapi",
+      "name": "civicAPI",
+      "homepage": "https://www.civicapi.org/",
+      "license": "Free for personal and commercial use; attribution required (link to civicapi.org).",
+      "trust": "aggregator",
+      "enabled": true,
+      "priority": 50,
+      "intervalSec": 60,
+      "params": {
+        "baseUrl": "https://civicapi.org/api/v2",
+        "nationalRaces": { "us_senate": 87528, "us_house": 87524, "governor": 87535 },
+        "search": { "enabled": false, "startDate": "2026-11-03", "endDate": "2026-11-03", "country": "US", "query": "", "limit": 500, "maxDetailFetchesPerCycle": 20 }
+      }
+    },
+    {
+      "id": "ap",
+      "adapter": "ap",
+      "name": "Associated Press Elections API",
+      "homepage": "https://developer.ap.org/ap-elections-api",
+      "license": "Paid licence required. Set AP_API_KEY to enable.",
+      "trust": "wire",
+      "enabled": false,
+      "priority": 90,
+      "intervalSec": 30,
+      "params": { "baseUrl": "https://api.ap.org/v3", "electionDate": "2026-11-03", "officeIds": ["S", "H", "G"] }
+    },
+    {
+      "id": "clarity-example",
+      "adapter": "clarity",
+      "name": "Official state results (Clarity/Civix ENR) — example slot",
+      "homepage": "https://results.enr.clarityelections.com/",
+      "license": "Public government records; check each jurisdiction's terms.",
+      "trust": "official",
+      "enabled": false,
+      "priority": 100,
+      "intervalSec": 120,
+      "params": { "state": "", "county": "", "electionId": "", "officeMap": {} }
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LiveDesk Admin</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .admin { display: grid; gap: 16px; }
+  .admin form, .admin .panel-body { display: grid; gap: 10px; }
+  .admin label { display: grid; gap: 4px; font-size: .82rem; font-weight: 600; color: var(--ink-2); }
+  .admin input, .admin select, .admin textarea { font: inherit; font-size: .88rem; padding: 7px 9px; border: 1px solid var(--line-2); border-radius: var(--r); background: var(--surface); color: var(--ink); min-width: 0; }
+  .admin textarea { font-family: var(--f-num); font-size: .8rem; min-height: 160px; }
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; align-items: start; }
+  .msg { font-size: .85rem; min-height: 1.2em; }
+  .msg.err { color: var(--bad); } .msg.ok { color: var(--ok); }
+  .src-row td input[type=number] { width: 80px; }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>LiveDesk</a><span class="muted small">Administration</span><span class="small" id="who" style="margin-left:auto"></span></div></header>
+<main class="wrap admin" id="main" style="padding-block:20px 40px">
+  <section class="panel" id="loginBox"><div class="panel-head"><h1 style="font-size:1.3rem">Sign in</h1></div>
+    <form class="panel-body" id="login"><label>Access token<input id="token" type="password" autocomplete="current-password" required></label>
+      <p class="small muted">Tokens are set by the server operator in the ADMIN_USERS environment variable, each with a role: viewer, editor or admin.</p>
+      <div><button class="btn primary">Sign in</button></div><p class="msg" id="loginMsg"></p></form></section>
+
+  <div id="app" hidden class="admin">
+    <section class="panel"><div class="panel-head"><h2>Event</h2><select id="eventSel" aria-label="Event"></select></div>
+      <div class="panel-body"><div class="row"><label style="flex:1">Status<select id="evStatus"><option>upcoming</option><option>live</option><option>completed</option><option>archived</option></select></label>
+        <label style="flex:2">Display name<input id="evName"></label><div style="align-self:end"><button class="btn" id="saveEv">Save event</button></div></div><p class="msg" id="evMsg"></p></div></section>
+
+    <section class="panel"><div class="panel-head"><h2>Data sources</h2><span class="small muted">Higher priority wins when sources disagree. Minimum refresh 15 s.</span></div>
+      <div class="table-scroll"><table class="races" id="srcTable"></table></div><p class="msg" id="srcMsg" style="padding:0 14px 12px"></p></section>
+
+    <div class="cols">
+      <section class="panel"><div class="panel-head"><h2>Race call, hold or correction</h2></div>
+        <form class="panel-body" id="ovr">
+          <label>Race<input id="ovrRace" list="raceList" placeholder="Type to search, e.g. us_senate:GA" required><datalist id="raceList"></datalist></label>
+          <label>Action<select id="ovrAction"><option value="projected">Enter a race call made by a named source</option><option value="certified">Mark certified (cite the official certification)</option><option value="retracted">Mark call withdrawn</option><option value="none">Remove any call</option><option value="hold">Hold counts (stop displaying while checked)</option><option value="clear">Clear my override (return to source data)</option></select></label>
+          <label>Winner(s)<select id="ovrWinner" multiple size="4"></select></label>
+          <label>Called or certified by<input id="ovrBy" placeholder="e.g. Georgia Secretary of State"></label>
+          <label>Link to the call or certification<input id="ovrUrl" type="url" placeholder="https://"></label>
+          <label>Public note<input id="ovrNote" placeholder="Shown on the race page"></label>
+          <div><button class="btn primary">Apply</button></div><p class="msg" id="ovrMsg"></p></form></section>
+
+      <section class="panel"><div class="panel-head"><h2>Publish an update</h2></div>
+        <form class="panel-body" id="ann">
+          <label>Headline<input id="annTitle" required placeholder="e.g. Maricopa County will release its next batch at 9 p.m. MT"></label>
+          <label>Source name<input id="annSource" required placeholder="e.g. Maricopa County Elections Department"></label>
+          <label>Source link<input id="annUrl" type="url" placeholder="https://"></label>
+          <label>Type<select id="annKind"><option value="announcement">Official announcement</option><option value="correction">Correction</option></select></label>
+          <div><button class="btn primary">Publish to feed</button></div><p class="msg" id="annMsg"></p></form></section>
+    </div>
+
+    <div class="cols">
+      <section class="panel"><div class="panel-head"><h2>Upload results or races (JSON)</h2></div>
+        <form class="panel-body" id="up">
+          <p class="small muted">Canonical format: <code>{"sourceName", "sourceUrl", "priority", "contests": [{"id", "office", "officeLabel", "jurisdiction": {"country","state","district","name"}, "candidates": [{"id","name","party","votes"}], "reporting": {"value","label","definition"}, "history": [...]}]}</code>. Use it for official canvass files, local races, ballot measures or historical results.</p>
+          <textarea id="upJson" spellcheck="false" aria-label="JSON to upload"></textarea>
+          <div><button class="btn primary">Upload</button></div><p class="msg" id="upMsg"></p></form></section>
+
+      <section class="panel"><div class="panel-head"><h2>New event</h2></div>
+        <form class="panel-body" id="newEv">
+          <p class="small muted">Paste an event configuration. Copy <code>config/events/us-2026-general.json</code> as a template; set its sources, rules and dashboard layout.</p>
+          <textarea id="newEvJson" spellcheck="false" aria-label="Event JSON">{"id": "", "name": "", "module": "elections", "category": "elections", "country": "", "status": "upcoming", "timezone": "UTC", "languages": ["en"], "rules": {}, "sources": []}</textarea>
+          <div><button class="btn primary">Create event</button></div><p class="msg" id="newEvMsg"></p></form></section>
+    </div>
+
+    <section class="panel"><div class="panel-head"><h2>Audit log</h2><button class="btn" id="loadAudit">Load</button></div><div id="audit"></div></section>
+  </div>
+</main>
+<script type="module" src="/js/admin.js"></script>
+</body>
+</html>

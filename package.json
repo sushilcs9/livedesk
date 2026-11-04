@@ -1,0 +1,20 @@
+{
+  "name": "livedesk",
+  "version": "0.1.0",
+  "description": "Live event results platform. First module: 2026 U.S. midterm elections.",
+  "type": "module",
+  "private": true,
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server/index.js",
+    "sample": "LIVEDESK_SAMPLE=1 node --disable-warning=ExperimentalWarning server/index.js",
+    "build:map": "node scripts/build-map.mjs",
+    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js"
+  },
+  "devDependencies": {
+    "d3-geo": "3.1.1",
+    "topojson-client": "3.1.0",
+    "us-atlas": "3.0.1"
+  },
+  "license": "MIT"
+}
