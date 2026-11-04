@@ -43,7 +43,7 @@ export const US_STATES = {
 export const num = v => (v === null || v === undefined || v === '' || Number.isNaN(Number(v))) ? null : Number(v);
 
 /** fetch with timeout, conditional-request headers and a polite User-Agent. */
-export async function politeFetch(url, { etag, lastModified, timeoutMs = 15000, headers = {} } = {}) {
+export async function politeFetch(url, { etag, lastModified, timeoutMs = 30000, headers = {} } = {}) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
